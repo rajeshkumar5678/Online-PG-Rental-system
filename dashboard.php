@@ -2,7 +2,7 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
-if (strlen($_SESSION['pgasaid']==0)) {
+if (strlen($_SESSION['pgasoid']==0)) {
   header('location:logout.php');
   } 
      ?>
@@ -45,122 +45,109 @@ if (strlen($_SESSION['pgasaid']==0)) {
 	<section class="wrapper">
 		<!-- //market-->
 		<div class="market-updates">
-			<div class="col-md-3 market-update-gd">
+			<div class="col-md-6 market-update-gd">
 				<div class="market-update-block clr-block-2">
 					<div class="col-md-4 market-update-right">
-						<i class="fa fa-globe"> </i>
+						<i class="fa fa-home fa-3x"> </i>
 					</div>
-					<?php $query1=mysqli_query($con,"Select * from  tblstate");
-$statecounts=mysqli_num_rows($query1);
+					
+					<?php 
+$oid=$_SESSION['pgasoid'];
+					$query=mysqli_query($con,"Select * from  tblpg where OwnerID='$oid'");
+$pgcounts=mysqli_num_rows($query);
 ?>
 					 <div class="col-md-8 market-update-left">
-					 	
-					 <h4><a href="manage-state.php" style="color: white">Total State</a></h4>
-					<h3><?php echo $statecounts;?></h3>
+					 <h4>Total Listed PG</h4>
+					<h3><?php echo $pgcounts;?></h3>
 					
 				  </div>
 				  <div class="clearfix"> </div>
 				</div>
 			</div>
-			<div class="col-md-3 market-update-gd">
+			<?php 
+
+					$query=mysqli_query($con,"Select * from  tblbookpg join tblpg on  tblpg.id=tblbookpg.Pgid where tblpg.OwnerID='$oid'");
+$totalrequests=mysqli_num_rows($query);
+?>
+			<div class="col-md-6 market-update-gd">
 				<div class="market-update-block clr-block-1">
 					<div class="col-md-4 market-update-right">
-						<i class="fa fa-globe" ></i>
+						<i class="fa fa-users" ></i>
 					</div>
-					<?php $query2=mysqli_query($con,"Select * from  tblcity");
-$citycounts=mysqli_num_rows($query2);
-?>
 					<div class="col-md-8 market-update-left">
-					<h4><a href="manage-city.php" style="color: white">Total City</a></h4>
-						<h3><?php echo $citycounts;?></h3>
-						
+					<h4>Total Booking</h4>
+						<h3><?php echo $totalrequests;?></h3>
 					</div>
 				  <div class="clearfix"> </div>
 				</div>
 			</div>
-			
-			<div class="col-md-3 market-update-gd">
-				<div class="market-update-block clr-block-3">
-					<div class="col-md-4 market-update-right">
-						<i class="fa fa-user"></i>
-					</div>
-					<?php $query3=mysqli_query($con,"Select * from  tblowner");
-$pgownercounts=mysqli_num_rows($query3);
-?>
-					<div class="col-md-8 market-update-left">
-					<h4><a href="manage-ownerdetails.php" style="color: white">Total PG Owner</a></h4>
-						<h3><?php echo $pgownercounts;?></h3>
-						
-					</div>
-				  <div class="clearfix"> </div>
-				</div>
-			</div>
-			<div class="market-updates">
-			<div class="col-md-3 market-update-gd">
-				<div class="market-update-block clr-block-2">
-					<div class="col-md-4 market-update-right">
-						<i class="fa fa-home"> </i>
-					</div>
-					<?php $query4=mysqli_query($con,"Select * from  tblpg");
-$pgcounts=mysqli_num_rows($query4);
-?>
-					<div class="col-md-8 market-update-left">
-					<h4><a href="manage-pgdetails.php" style="color: white">Total PG</a></h4>
-						<h3><?php echo $pgcounts;?></h3>
-						
-					</div>
-				  <div class="clearfix"> </div>
-				</div>
-			</div>
+		
+		
 
 		   <div class="clearfix"> </div>
 		</div>	
 		<div class="market-updates">
-           
-		<div class="row">
-			<div class="panel-body">
-				<div class="col-md-12 w3ls-graph">
-					<!--agileinfo-grap-->
-						
-	<!--//agileinfo-grap-->
+       			<?php 
+$query=mysqli_query($con,"Select * from  tblbookpg join tblpg on  tblpg.id=tblbookpg.Pgid where tblpg.OwnerID='$oid' and tblbookpg.Status is null");
+$newbooking=mysqli_num_rows($query);
+?>
+            <div class="col-md-4 market-update-gd">
+                <div class="market-update-block clr-block-3">
+                    <div class="col-md-4 market-update-right">
+                        <i class="fa fa-users"></i>
+                    </div>
+                    <div class="col-md-8 market-update-left">
+                        <h4>New Bookings </h4>
+                        <h3><?php echo $newbooking;?></h3>
+                      
+                    </div>
+                  <div class="clearfix"> </div>
+                </div>
+            </div>
+                   			<?php 
+$query=mysqli_query($con,"Select * from  tblbookpg join tblpg on  tblpg.id=tblbookpg.Pgid where tblpg.OwnerID='$oid' and tblbookpg.Status='Confirmed'");
+$confirmedbooking=mysqli_num_rows($query);
+?>
+            <div class="col-md-4 market-update-gd">
+                <div class="market-update-block clr-block-4">
+                    <div class="col-md-4 market-update-right">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-md-8 market-update-left">
+                        <h4>Confirmed booking</h4>
+                        <h3><?php echo $confirmedbooking;?></h3>
+                    </div>
+                  <div class="clearfix"> </div>
+                </div>
+            </div>
 
+	<div class="col-md-4 market-update-gd">
+				<div class="market-update-block clr-block-2">
+					<div class="col-md-4 market-update-right">
+						<i class="fa fa-users"> </i>
+					</div>
+					
+					<?php 
+$query=mysqli_query($con,"Select * from  tblbookpg join tblpg on  tblpg.id=tblbookpg.Pgid where tblpg.OwnerID='$oid' and tblbookpg.Status='Cancelled'");
+$notconfirmedbooking=mysqli_num_rows($query);
+?>
+					 <div class="col-md-8 market-update-left">
+					 <h4>Not Confirmed Booking (Cancelled)</h4>
+					<h3><?php echo $notconfirmedbooking;?></h3>
+					
+				  </div>
+				  <div class="clearfix"> </div>
 				</div>
 			</div>
-		</div>
-		<div class="agil-info-calendar">
-		<!-- calendar -->
-		<div class="col-md-6 agile-calendar">
-			
-		</div>
-		<!-- //calendar -->
-		<div class="col-md-6 w3agile-notifications">
-			
-			</div>
-			<div class="clearfix"> </div>
-		</div>
+		 
+
+
+
+</div>
+	
 			<!-- tasks -->
-			<div class="agile-last-grids">
-				<div class="col-md-4 agile-last-left">
-					
-				</div>
-				<div class="col-md-4 agile-last-left agile-last-middle">
-					
-				</div>
-				<div class="col-md-4 agile-last-left agile-last-right">
-					
-				</div>
-				<div class="clearfix"> </div>
-			</div>
-		<!-- //tasks -->
-		<div class="agileits-w3layouts-stats">
-					<div class="col-md-4 stats-info widget">
-						
-					</div>
-					<div class="col-md-8 stats-info stats-last widget-shadow">
-						
-					</div>
-					<div class="clearfix"> </div>
-				</div>
+		
+
 </section>
  <!-- footer -->
 	<?php include_once('includes/footer.php');?>	  

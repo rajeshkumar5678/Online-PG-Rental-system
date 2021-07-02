@@ -11,7 +11,7 @@ if (strlen($_SESSION['pgasoid']==0)) {
 
 <!DOCTYPE html>
 <head>
-<title>Paying Guest Accomodation System|| Manage State </title>
+<title>Paying Guest Accomodation System|| Search</title>
 
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <!-- bootstrap-css -->
@@ -44,7 +44,30 @@ if (strlen($_SESSION['pgasoid']==0)) {
     <div class="panel-heading">
      Paying Guest Details
     </div>
+
+
     <div>
+      <form class="cmxform form-horizontal" method="post" action="" name="search">
+                                   
+                                    <div class="form-group ">
+                                        
+                                    </div>
+                                    <div class="form-group ">
+                                        <label for="username" class="control-label col-lg-3">Search by Booking Number:</label>
+                                        <div class="col-lg-6">
+                                            <input type="text" name="searchdata" id="searchdata" class="form-control" value="" required="true">
+                                        </div>
+                                    </div>
+                                   
+                                    <div class="form-group">
+                                        <div class="col-lg-offset-3 col-lg-6">
+                                          <p style="text-align: center;"> <button class="btn btn-primary" type="submit" name="search">Search</button></p>
+                                           
+                                        </div>
+                                    </div>
+
+                                </form>
+                                
       <table class="table" ui-jq="footable" ui-options='{
         "paging": {
           "enabled": true
@@ -55,21 +78,29 @@ if (strlen($_SESSION['pgasoid']==0)) {
         "sorting": {
           "enabled": true
         }}'>
+        <?php
+if(isset($_POST['search']))
+{ 
+
+$sdata=$_POST['searchdata'];
+  ?>
+  <h4 align="center">Result against "<?php echo $sdata;?>" keyword </h4>
         <thead>
           <tr>
             <th data-breakpoints="xs">S.NO</th>
             <th>PG Name</th>
-            <th>State Name</th>
-            <th>City Name</th>
-            <th>Registration Date</th>
+            <th>BookingNumber</th>
+            <th>CheckinDate</th>
             <th data-breakpoints="xs">Action</th>
            
            
           </tr>
         </thead>
         <?php
-        $oid=$_SESSION['pgasoid'];
-$ret=mysqli_query($con,"select * from  tblpg where OwnerID='$oid'");
+      echo   $oid=$_SESSION['pgasoid'];
+$ret=mysqli_query($con,"select tblbookpg.ID,tblbookpg.BookingNumber,tblbookpg.CheckinDate,tblpg.PGTitle  from  tblbookpg join tblpg on tblpg.ID=tblbookpg.Pgid where   tblpg.OwnerID='$oid' && tblbookpg.BookingNumber like '%$sdata%'");
+$num=mysqli_num_rows($ret);
+if($num>0){
 $cnt=1;
 while ($row=mysqli_fetch_array($ret)) {
 
@@ -77,15 +108,22 @@ while ($row=mysqli_fetch_array($ret)) {
         <tbody>
           <tr data-expanded="true">
             <td><?php echo $cnt;?></td>
-              <td><?php  echo $row['PGTitle'];?></td>
-                  <td><?php  echo $row['StateName'];?></td>
-                  <td><?php  echo $row['CityName'];?></td>
-                  <td><?php  echo $row['RegDate'];?></td>
-                  <td><a href="edit-pgdetails.php?editid=<?php echo $row['ID'];?>">Edit Details</a>
+              
+                  <td><?php  echo $row['PGTitle'];?></td>
+                  <td><?php  echo $row['BookingNumber'];?></td>
+                  <td><?php  echo $row['CheckinDate'];?></td>
+                  <td><a href="view-requestdetails.php?viewid=<?php echo $row['ID'];?>">View Details</a>
                 </tr>
                 <?php 
 $cnt=$cnt+1;
-}?>
+} } else { ?>
+  <tr>
+    <td colspan="8"> No record found against this search</td>
+
+  </tr>
+   
+<?php } }?>
+
  </tbody>
             </table>
             

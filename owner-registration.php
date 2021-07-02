@@ -1,26 +1,38 @@
-<?php
+
+<?php 
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
-
-if(isset($_POST['login']))
+if(isset($_POST['submit']))
   {
-    $owemail=$_POST['email'];
+    $fname=$_POST['name'];
+    $mobno=$_POST['mobilnumber'];
+    $email=$_POST['email'];
     $password=md5($_POST['password']);
-    $query=mysqli_query($con,"select ID from tblowner where  Email='$owemail' && Password='$password' ");
-    $ret=mysqli_fetch_array($query);
-    if($ret>0){
-      $_SESSION['pgasoid']=$ret['ID'];
-     header('location:dashboard.php');
+
+    $ret=mysqli_query($con, "select Email from tblowner where Email='$email'");
+    $result=mysqli_fetch_array($ret);
+    if($result>0){
+$msg="This email or Contact Number already associated with another account";
     }
     else{
-    $msg="Invalid Details.";
-    }
+    $query=mysqli_query($con, "insert into tblowner(FullName, MobileNumber, Email,  Password) value('$fname', '$mobno', '$email', '$password' )");
+    if ($query) {
+    $msg="You have successfully registered";
   }
-  ?>
+  else
+    {
+      $msg="Something Went Wrong. Please try again";
+    }
+}
+}
+
+ ?>
+
+
 <!DOCTYPE html>
 <head>
-<title>Paying Guest Accomodation System | Owner Login </title>
+<title>Paying Guest Accomodation System | Owner Registration </title>
 
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <!-- bootstrap-css -->
@@ -36,23 +48,40 @@ if(isset($_POST['login']))
 <link href="css/font-awesome.css" rel="stylesheet"> 
 <!-- //font-awesome icons -->
 <script src="js/jquery2.0.3.min.js"></script>
+<script type="text/javascript">
+function checkpass()
+{
+if(document.signup.password.value!=document.signup.repeatpassword.value)
+{
+alert('Password and Repeat Password field does not match');
+document.signup.repeatpassword.focus();
+return false;
+}
+return true;
+} 
+
+</script>
+
 </head>
 <body>
-<div class="log-w3">
+<div class="reg-w3">
 <div class="w3layouts-main">
-	<h2>Sign In Now</h2>
-		<form action="#" method="post" name="login">
-			<p style="font-size:16px; color:red" align="center"> <?php if($msg){
+	<h2>Register Now</h2>
+	<p style="font-size:16px; color:red" align="center"> <?php if($msg){
     echo $msg;
   }  ?> </p>
+		<form action="#" method="post">
+			<input type="text" class="ggg" name="name" placeholder="NAME" required="true">
 			<input type="email" class="ggg" name="email" placeholder="E-MAIL" required="true">
+			<input type="text" class="ggg" name="mobilnumber" placeholder="PHONE" required="true" maxlength="10" pattern="[0-9]+">
 			<input type="password" class="ggg" name="password" placeholder="PASSWORD" required="true">
+			<input type="password" class="ggg" name="repeatpassword" placeholder="REPEAT PASSWORD" required="true">
+			<h4><input type="checkbox"  required="true" />I agree to the Terms of Service and Privacy Policy</h4>
 			
-			<a href="forgot-password.php">Forgot Password?</a>
 				<div class="clearfix"></div>
-				<input type="submit" value="Sign In" name="login">
+				<input type="submit" value="submit" name="submit">
 		</form>
-		<p>Don't Have an Account ?<a href="owner-registration.php">Create an account</a></p>
+		<p>Already Registered.<a href="login.php">Login</a></p>
 </div>
 </div>
 <script src="js/bootstrap.js"></script>

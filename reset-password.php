@@ -10,7 +10,7 @@ if(isset($_POST['submit']))
     $email=$_SESSION['email'];
     $password=md5($_POST['newpassword']);
 
-        $query=mysqli_query($con,"update tbladmin set Password='$password'  where  Email='$email' && MobileNumber='$contactno' ");
+        $query=mysqli_query($con,"update tblowner set Password='$password'  where  Email='$email' && MobileNumber='$contactno' ");
    if($query)
    {
 echo "<script>alert('Password successfully changed');</script>";
@@ -23,7 +23,8 @@ session_destroy();
 
 <!DOCTYPE html>
 <head>
-<title>Paying Guest Accomodation System | Reset Password </title>
+<title>Paying Guest Accomodation System | Forgot </title>
+
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <!-- bootstrap-css -->
 <link rel="stylesheet" href="css/bootstrap.min.css" >

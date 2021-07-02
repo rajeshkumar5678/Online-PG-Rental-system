@@ -8,7 +8,7 @@ if(isset($_POST['submit']))
     $contactno=$_POST['contactno'];
     $email=$_POST['email'];
 
-        $query=mysqli_query($con,"select ID from tbladmin where  Email='$email' and MobileNumber='$contactno' ");
+        $query=mysqli_query($con,"select ID from tblowner where  Email='$email' and MobileNumber='$contactno' ");
     $ret=mysqli_fetch_array($query);
     if($ret>0){
       $_SESSION['contactno']=$contactno;
@@ -23,6 +23,7 @@ if(isset($_POST['submit']))
 <!DOCTYPE html>
 <head>
 <title>Paying Guest Accomodation System | Forgot </title>
+
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <!-- bootstrap-css -->
 <link rel="stylesheet" href="css/bootstrap.min.css" >

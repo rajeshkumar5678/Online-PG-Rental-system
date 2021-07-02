@@ -1,38 +1,31 @@
 <?php
 session_start();
-include('includes/dbconnection.php');
 error_reporting(0);
+include('includes/dbconnection.php');
 if (strlen($_SESSION['pgasoid']==0)) {
   header('location:logout.php');
   } else{
-if(isset($_POST['submit']))
-{
-$ownid=$_SESSION['pgasoid'];
-$cpassword=md5($_POST['currentpassword']);
-$newpassword=md5($_POST['newpassword']);
-$query=mysqli_query($con,"select ID from tblowner where ID='$ownid' and   Password='$cpassword'");
-$row=mysqli_fetch_array($query);
-if($row>0){
-$ret=mysqli_query($con,"update tblowner set Password='$newpassword' where ID='$ownid'");
-$msg= "Your password successully changed"; 
-} else {
+    if(isset($_POST['submit']))
+  {
+    $ownid=$_SESSION['pgasoid'];
+    $fullname=$_POST['fullname'];
+  $mobno=$_POST['contactnumber'];
+  $email=$_POST['email'];
 
-$msg="Your current password is wrong";
-}
-
-
-
-}
-
-  
+     $query=mysqli_query($con, "update tblowner set FullName ='$fullname', Email='$email', MobileNumber='$mobno' where ID='$ownid'");
+    if ($query) {
+    $msg="Owner profile has been updated.";
+  }
+  else
+    {
+      $msg="Something Went Wrong. Please try again.";
+    }
+  }
   ?>
-
-
-
 
 <!DOCTYPE html>
 <head>
-<title>Paying Guest Accomodation System|| Change Password  </title>
+<title>Paying Guest Accomodation System|| Owner Profile  </title>
 
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <!-- bootstrap-css -->
@@ -48,19 +41,6 @@ $msg="Your current password is wrong";
 <link href="css/font-awesome.css" rel="stylesheet"> 
 <!-- //font-awesome icons -->
 <script src="js/jquery2.0.3.min.js"></script>
-<script type="text/javascript">
-function checkpass()
-{
-if(document.changepassword.newpassword.value!=document.changepassword.confirmpassword.value)
-{
-alert('New Password and Confirm Password field does not match');
-document.changepassword.confirmpassword.focus();
-return false;
-}
-return true;
-} 
-
-</script>
 </head>
 <body>
 <section id="container">
@@ -79,10 +59,9 @@ return true;
           
             <div class="row">
                 <div class="col-lg-12">
-                  
                     <section class="panel">
                         <header class="panel-heading">
-                            Change Password
+                            Owner Profile
                             <span class="tools pull-right">
                                 <a class="fa fa-chevron-down" href="javascript:;"></a>
                                 <a class="fa fa-cog" href="javascript:;"></a>
@@ -91,45 +70,50 @@ return true;
                         </header>
                         <div class="panel-body">
                             <div class="form">
-               <p style="font-size:16px; color:red" align="center"> <?php if($msg){
+                                 <p style="font-size:16px; color:red" align="center"> <?php if($msg){
     echo $msg;
-  }  ?> </p>                  
+  }  ?> </p>
 
-  <?php
-  
+   <?php
 $ownid=$_SESSION['pgasoid'];
 $ret=mysqli_query($con,"select * from tblowner where ID='$ownid'");
 $cnt=1;
 while ($row=mysqli_fetch_array($ret)) {
-?>
 
-                                <form class="cmxform form-horizontal " method="post" action="" name="changepassword" onsubmit="return checkpass();">
+?>
+                                <form class="cmxform form-horizontal " method="post" action="">
                                     <div class="form-group ">
-                                        <label for="adminname" class="control-label col-lg-3">Current Password: </label>
+                                        <label for="adminname" class="control-label col-lg-3">Full Name</label>
                                         <div class="col-lg-6">
-                                            <input type="password" name="currentpassword" class=" form-control" required= "true" value="">
+                                            <input class=" form-control" id="fullname" name="fullname" type="text" value="<?php  echo $row['FullName'];?>" required="true">
                                         </div>
                                     </div>
                                     <div class="form-group ">
-                                        <label for="lastname" class="control-label col-lg-3">New Password:</label>
+                                        <label for="email" class="control-label col-lg-3">Email</label>
                                         <div class="col-lg-6">
-                                           <input type="password" name="newpassword" class="form-control" value="">
+                                            <input class="form-control " id="email" name="email" type="email" value="<?php  echo $row['Email'];?>" required="true">
                                         </div>
                                     </div>
                                     <div class="form-group ">
-                                        <label for="username" class="control-label col-lg-3">Confirm Password:</label>
+                                        <label for="username" class="control-label col-lg-3">Mobile Number</label>
                                         <div class="col-lg-6">
-                                            <input type="password" name="confirmpassword" class="form-control" value="">
+                                            <input class="form-control " id="contactnumber" name="contactnumber" type="text" value="<?php  echo $row['MobileNumber'];?>" required="true">
                                         </div>
                                     </div>
-                                   
+                                    <div class="form-group ">
+                                        <label for="username" class="control-label col-lg-3">Registration Date</label>
+                                        <div class="col-lg-6">
+                                            <input class="form-control " id="regDate" name="regdate" type="text" value="<?php  echo $row['RegDate'];?>" readonly="true">
+                                        </div>
+                                    </div>
+                                    
                                     <?php } ?>
                         
                                   
 
                                     <div class="form-group">
                                         <div class="col-lg-offset-3 col-lg-6">
-                                          <p style="text-align: center;"> <button class="btn btn-primary" type="submit" name="submit">Change</button></p>
+                                          <p style="text-align: center;"> <button class="btn btn-primary" type="submit" name="submit">Update</button></p>
                                            
                                         </div>
                                     </div>

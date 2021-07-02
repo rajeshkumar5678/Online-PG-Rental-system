@@ -11,7 +11,7 @@ if (strlen($_SESSION['pgasoid']==0)) {
 
 <!DOCTYPE html>
 <head>
-<title>Paying Guest Accomodation System|| Manage State </title>
+<title>Paying Guest Accomodation System|| Booking Requests</title>
 
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <!-- bootstrap-css -->
@@ -38,11 +38,11 @@ if (strlen($_SESSION['pgasoid']==0)) {
 <!--sidebar end-->
 <!--main content start-->
 <section id="main-content">
-	<section class="wrapper">
-		<div class="table-agile-info">
+  <section class="wrapper">
+    <div class="table-agile-info">
  <div class="panel panel-default">
     <div class="panel-heading">
-     Paying Guest Details
+  Confirmed Request for Paying Guest
     </div>
     <div>
       <table class="table" ui-jq="footable" ui-options='{
@@ -58,10 +58,12 @@ if (strlen($_SESSION['pgasoid']==0)) {
         <thead>
           <tr>
             <th data-breakpoints="xs">S.NO</th>
+            <th>User Name</th>
+            <th>Booking Number</th>
             <th>PG Name</th>
-            <th>State Name</th>
-            <th>City Name</th>
-            <th>Registration Date</th>
+            <th>Checkin Date</th>
+            <th>Booking Date</th>
+            
             <th data-breakpoints="xs">Action</th>
            
            
@@ -69,7 +71,7 @@ if (strlen($_SESSION['pgasoid']==0)) {
         </thead>
         <?php
         $oid=$_SESSION['pgasoid'];
-$ret=mysqli_query($con,"select * from  tblpg where OwnerID='$oid'");
+$ret=mysqli_query($con,"select tblbookpg.ID,tblbookpg.BookingNumber,tblbookpg.CheckinDate,tblbookpg.BookingDate,tblpg.PGTitle,tbluser.FullName from  tblbookpg join tblpg on tblpg.ID=tblbookpg.Pgid join tbluser on tbluser.ID=tblbookpg.Userid where tblpg.OwnerID='$oid' && tblbookpg.Status='Cancelled'");
 $cnt=1;
 while ($row=mysqli_fetch_array($ret)) {
 
@@ -77,11 +79,12 @@ while ($row=mysqli_fetch_array($ret)) {
         <tbody>
           <tr data-expanded="true">
             <td><?php echo $cnt;?></td>
-              <td><?php  echo $row['PGTitle'];?></td>
-                  <td><?php  echo $row['StateName'];?></td>
-                  <td><?php  echo $row['CityName'];?></td>
-                  <td><?php  echo $row['RegDate'];?></td>
-                  <td><a href="edit-pgdetails.php?editid=<?php echo $row['ID'];?>">Edit Details</a>
+              <td><?php  echo $row['FullName'];?></td>
+                  <td><?php  echo $row['BookingNumber'];?></td>
+                  <td><?php  echo $row['PGTitle'];?></td>
+                  <td><?php  echo $row['CheckinDate'];?></td>
+                  <td><?php  echo $row['BookingDate'];?></td>
+                  <td><a href="view-requestdetails.php?viewid=<?php echo $row['ID'];?>">View Details</a>
                 </tr>
                 <?php 
 $cnt=$cnt+1;
@@ -96,7 +99,7 @@ $cnt=$cnt+1;
 </div>
 </section>
  <!-- footer -->
-		 <?php include_once('includes/footer.php');?>  
+     <?php include_once('includes/footer.php');?>  
   <!-- / footer -->
 </section>
 
